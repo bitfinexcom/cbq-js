@@ -1,3 +1,5 @@
+'use strict'
+
 class CbQ {
   constructor () {
     this.q = new Map()
