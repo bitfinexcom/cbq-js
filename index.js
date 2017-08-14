@@ -1,5 +1,4 @@
 class CbQ {
-
   constructor () {
     this.q = new Map()
   }
