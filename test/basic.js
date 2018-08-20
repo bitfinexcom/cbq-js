@@ -19,8 +19,20 @@ describe('basic functionality', () => {
     const q = new CbQ()
 
     q.push('foo', () => {})
-    q.push('foo', (err) => { if (err) done() })
+    q.push('foo', (err) => {
+      if (err) done()
+    })
 
-    q.trigger('foo', new Error())
+    q.trigger('foo', new Error('foo error'))
+  })
+
+  it('triggers errors for first queued function', (done) => {
+    const q = new CbQ()
+
+    q.push('foo', (err) => {
+      if (err) done()
+    })
+
+    q.trigger('foo', new Error('foo error'))
   })
 })
