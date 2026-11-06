@@ -1,38 +1,38 @@
-/* eslint-env mocha */
-
 'use strict'
 
 const CbQ = require('../')
-const assert = require('assert')
+const test = require('brittle')
 
-describe('basic functionality', () => {
-  it('supports counting', () => {
-    const q = new CbQ()
+test('supports counting', (t) => {
+  const q = new CbQ()
 
-    q.push('foo')
-    q.push('foo')
+  q.push('foo')
+  q.push('foo')
 
-    assert.equal(q.cnt('foo'), 2)
+  t.is(q.cnt('foo'), 2)
+})
+
+test('triggers errors for queued functions', (t) => {
+  t.plan(1)
+
+  const q = new CbQ()
+
+  q.push('foo', () => {})
+  q.push('foo', (err) => {
+    t.ok(err)
   })
 
-  it('triggers errors for queued functions', (done) => {
-    const q = new CbQ()
+  q.trigger('foo', new Error('foo error'))
+})
 
-    q.push('foo', () => {})
-    q.push('foo', (err) => {
-      if (err) done()
-    })
+test('triggers errors for first queued function', (t) => {
+  t.plan(1)
 
-    q.trigger('foo', new Error('foo error'))
+  const q = new CbQ()
+
+  q.push('foo', (err) => {
+    t.ok(err)
   })
 
-  it('triggers errors for first queued function', (done) => {
-    const q = new CbQ()
-
-    q.push('foo', (err) => {
-      if (err) done()
-    })
-
-    q.trigger('foo', new Error('foo error'))
-  })
+  q.trigger('foo', new Error('foo error'))
 })
